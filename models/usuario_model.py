@@ -9,7 +9,7 @@ class UsuarioModel(DBBaseModel):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(256), nullable=False)
     sobrenome = Column(String(256), nullable=False)
-    email = Column(String(256), nullable=False)
+    email = Column(String(256), nullable=False, index=True, unique=True)
     senha = Column(String(256), nullable=False)
     eh_admin = Column(Boolean, nullable=False, default=False)
 

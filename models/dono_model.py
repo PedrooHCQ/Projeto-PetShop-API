@@ -7,7 +7,7 @@ class DonoModel(DBBaseModel):
     __tablename__ = 'donos'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    cpf = Column(String(11), nullable=False, unique=True)
+    cpf = Column(String(11), nullable=False, index=True, unique=True)
     nome = Column(String(256), nullable=False)
     sobrenome = Column(String(256), nullable=False)
     telefone = Column(String(256), nullable=False)

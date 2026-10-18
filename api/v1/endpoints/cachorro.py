@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post("/", response_model=CachorroSchema, status_code=status.HTTP_201_CREATED)
 async def post_cachorro(cachorro: CachorroSchema, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
-    novo_cachorro: CachorroModel = CachorroModel(nome=cachorro.nome, raca=cachorro.raca, idade=cachorro.idade, dono=cachorro.id, usuario=usuario_logado.id)
+    novo_cachorro: CachorroModel = CachorroModel(nome=cachorro.nome, raca=cachorro.raca, idade=cachorro.idade, dono_id=cachorro.dono_id, usuario_id=usuario_logado.id)
 
     async with db as session:
         session.add(novo_cachorro)

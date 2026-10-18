@@ -16,5 +16,5 @@ class UsuarioModel(DBBaseModel):
     cachorros = relationship('CachorroModel',
                              cascade='all, delete-orphan',
                              back_populates='criador',
-                             uselist=False,
+                             uselist=True,
                              lazy="joined")

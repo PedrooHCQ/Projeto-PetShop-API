@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post("/", response_model=DonoSchema, status_code=status.HTTP_201_CREATED)
 async def post_donos(dono: DonoSchema, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
-    novo_dono: UsuarioModel = UsuarioModel(cpf=dono.cpf, nome=dono.nome, sobrenome=dono.sobrenome, telefone=dono.telefone, endereco=dono.endereco)
+    novo_dono: DonoModel = DonoModel(cpf=dono.cpf, nome=dono.nome, sobrenome=dono.sobrenome, telefone=dono.telefone, endereco=dono.endereco)
 
     async with db as session:
         try:
@@ -35,7 +35,7 @@ async def get_donos(db: AsyncSession = Depends(get_session), usuario_logado: Usu
 
         return donos
 
-@router.get("/{cpf_dono}", status_code=status.HTTP_200_OK, response_model=DonoCachorrosSchema)
+@router.get("/cpf/{cpf_dono}", status_code=status.HTTP_200_OK, response_model=DonoCachorrosSchema)
 async def get_dono(cpf_dono: str, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
         query = select(DonoModel).filter(DonoModel.cpf == cpf_dono)
@@ -47,7 +47,7 @@ async def get_dono(cpf_dono: str, db: AsyncSession = Depends(get_session), usuar
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dono não encontrado.")
 
-@router.put("/{cpf_dono}", status_code=status.HTTP_202_ACCEPTED, response_model=DonoSchema)
+@router.put("/cpf/{cpf_dono}", status_code=status.HTTP_202_ACCEPTED, response_model=DonoSchema)
 async def put_dono(cpf_dono: str, dono: DonoUpSchema, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
         query = select(DonoModel).filter(DonoModel.cpf == cpf_dono)
@@ -73,7 +73,7 @@ async def put_dono(cpf_dono: str, dono: DonoUpSchema, db: AsyncSession = Depends
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dono não encontrado.")
 
 
-@router.delete("/{cpf_dono}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/cpf/{cpf_dono}", status_code=status.HTTP_204_NO_CONTENT)
 async def get_dono(cpf_dono: str, db: AsyncSession = Depends(get_session),
                    usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
@@ -89,8 +89,8 @@ async def get_dono(cpf_dono: str, db: AsyncSession = Depends(get_session),
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dono não encontrado.")
 
-@router.get("/{dono_id}", status_code=status.HTTP_200_OK, response_model=DonoCachorrosSchema)
-async def get_dono(dono_id: int, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
+@router.get("/id/{dono_id}", status_code=status.HTTP_200_OK, response_model=DonoCachorrosSchema)
+async def get_dono_id(dono_id: int, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
         query = select(DonoModel).filter(DonoModel.id == dono_id)
         result = await session.execute(query)
@@ -101,7 +101,7 @@ async def get_dono(dono_id: int, db: AsyncSession = Depends(get_session), usuari
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dono não encontrado.")
 
-@router.put("/{dono_id}", status_code=status.HTTP_202_ACCEPTED, response_model=DonoSchema)
+@router.put("/id/{dono_id}", status_code=status.HTTP_202_ACCEPTED, response_model=DonoSchema)
 async def put_dono(dono_id: int, dono: DonoUpSchema, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
         query = select(DonoModel).filter(DonoModel.id == dono_id)
@@ -126,7 +126,7 @@ async def put_dono(dono_id: int, dono: DonoUpSchema, db: AsyncSession = Depends(
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dono não encontrado.")
 
-@router.delete("/{dono_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/id/{dono_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def get_dono(dono_id: int, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
         query = select(DonoModel).filter(DonoModel.id == dono_id)

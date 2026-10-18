@@ -12,7 +12,7 @@ class DonoModel(DBBaseModel):
     sobrenome = Column(String(256), nullable=False)
     telefone = Column(String(256), nullable=False)
     endereco = Column(String(256), nullable=False)
-    cachorros = relationship("CachorrosModel",
+    cachorros = relationship("CachorroModel",
                            cascade="all, delete-orphan",
                            back_populates="dono",
                            uselist=True,

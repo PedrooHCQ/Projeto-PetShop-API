@@ -1,4 +1,8 @@
-from idlelib import query
+from datetime import datetime, timedelta
+
+from pytz import timezone
+
+from jose import jwt
 
 from fastapi.security import OAuth2PasswordBearer
 
@@ -28,3 +32,23 @@ async def autenticar(email: EmailStr,senha: str, db: AsyncSession) -> Optional[U
             return None
 
         return usuario
+
+def _criar_token(tipo_token: str, tempo_vida: timedelta, sub: str) -> str:
+    payload = {}
+
+    sp = timezone('America/Sao_Paulo')
+    expira = datetime.now(tz=sp) + tempo_vida
+
+    payload['type'] = tipo_token
+    payload['exp'] = expira
+    payload['iat'] = datetime.now(tz=sp)
+    payload['sub'] = str(sub)
+
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.ALGORITHM)
+
+def criar_token_acesso(sub: str) -> str:
+    return _criar_token(
+        tipo_token='access_token',
+        tempo_vida=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+        sub=sub
+    )

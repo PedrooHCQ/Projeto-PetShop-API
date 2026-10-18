@@ -12,7 +12,7 @@ from schemas.cachorro_schema import CachorroSchema, CachorroUpSchema
 
 router = APIRouter()
 
-@router.post("/", response_model=CachorroModel, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=CachorroSchema, status_code=status.HTTP_201_CREATED)
 async def post_cachorro(cachorro: CachorroSchema, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     novo_cachorro: CachorroModel = CachorroModel(nome=cachorro.nome, raca=cachorro.raca, idade=cachorro.idade, dono=cachorro.id, usuario=usuario_logado.id)
 

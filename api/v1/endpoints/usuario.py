@@ -46,7 +46,7 @@ async def get_usuarios(db: AsyncSession = Depends(get_session), usuario_logado: 
 @router.get("/{usuario_id}", response_model=UsuarioSchema, status_code=status.HTTP_200_OK)
 async def get_usuario(usuario_id: int, db: AsyncSession = Depends(get_session), usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
-        query = select(UsuarioModel).filter(UsuarioModel.usuario_id == usuario_id)
+        query = select(UsuarioModel).filter(UsuarioModel.id == usuario_id)
         result = await session.execute(query)
         usuario: UsuarioSchema = result.scalars().unique().one_or_none()
 
@@ -60,7 +60,7 @@ async def get_usuario(usuario_id: int, db: AsyncSession = Depends(get_session), 
 async def put_usuario(usuario_id: int, usuario: UsuarioUpSchema, db: AsyncSession = Depends(get_session),
                       usuario_logado: UsuarioModel = Depends(get_current_user)):
     async with db as session:
-        query = select(UsuarioModel).filter(UsuarioModel.usuario_id == usuario_id)
+        query = select(UsuarioModel).filter(UsuarioModel.id == usuario_id)
         result = await session.execute(query)
         usuario_up: UsuarioUpSchema = result.scalars().unique().one_or_none()
 
@@ -85,8 +85,11 @@ async def put_usuario(usuario_id: int, usuario: UsuarioUpSchema, db: AsyncSessio
 @router.delete("/{usuario_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_usuario(usuario_id: int, db: AsyncSession = Depends(get_session),
                       usuario_logado: UsuarioModel = Depends(get_current_user)):
+    if usuario_id == usuario_logado.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem autorização para excluir seu próprio usuário.")
+
     async with db as session:
-        query = select(UsuarioModel).filter(UsuarioModel.usuario_id == usuario_id).filter(UsuarioModel.usuario_id != usuario_logado.id)
+        query = select(UsuarioModel).filter(UsuarioModel.id == usuario_id).filter(UsuarioModel.id != usuario_logado.id)
         result = await session.execute(query)
         usuario_del: UsuarioSchema = result.scalars().unique().one_or_none()
 
